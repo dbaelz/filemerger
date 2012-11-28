@@ -120,6 +120,22 @@ Die Ausgabe wird nicht in eine Datei geschrieben. Bei gewünschter Speicherung i
 \section{Algorithmus}
 \label{sec:algorithm}
 <TODO: Theorie und Algorithmus des LGT mit Verweis auf \citet{www:EP96}>
+Der Merger baut auf die Längste gemeinsame Teilfolge der Zeilen, von allen drei Dateiversionen, auf und kümmert sich um die darauffolgenden Konflikte.
+
+Zur Ermittlung der längsten gemeinsamen Teilfolge, verwendeten wir den in \citet{www:EP96}> beschriebenen Algorithmus, und nutzt die aufsteigende dynamische Programmierung.
+Der beschriebene Algorithmus bekommt, in unserem Fall, 2 Listen als Eingabeparameter.
+Zunächst wird eine Matrix erstellt in der die Vergleichsresultate der einzelnen Listenelemente gespeichert sind.
+Die Iteration durch die genullte Matrix erfolgt aufsteigend, sie beginnt somit unten rechts und endet oben links.
+Mit einer Übereinstimmung zweier Listenelemente wird der Wert, abhängig vom diagonal unterliegendes Feldes, um 1 erhöht.
+Bei keiner weiteren Übereinstimmung erhalten die anderen Felder den Wert des rechts oder unten angrenzenden Feldes.
+Am Ende des Durchlaufes steht somit im ersten Feld der Matrix die Länge der längsten gemeinsamen Teilfolge.
+
+Um nun die längste gemeinsame Teilfolge zu ermitteln muss erneut über die gewonnene Matrix und die einzelnen Listenelemente der Eingabeparameter iteriert werden.
+Hierfür werden die diagonalen Übergänge in der Matrix gesucht, da dort die Listenelemente übersteinstimmen, diese werden nun zum Ergebnis hinzugefügt.
+
+Der beschriebene Algorithmus ermittelt den LGT innerhalb von $O(nm)$ , bei unterschiedlich langen Dateien, und in $O(n^2)$ bei gleich langen Dateien, somit erfüllt der Algorithmus die gewünschte
+Laufzeitforderung.
+
 
 \section{Implementierung}
 \label{sec:implementation}
@@ -133,9 +149,32 @@ Die Klasse Main enthält als statische Methode die main-Methode, welche die Para
 \label{sec:classmerge}
 Die Erstellung des LGT und die darauf aufbauenden Verschmelzung der Dateien V1 und V2 ist Aufgabe der Klasse Merge. Diese nimmt aus der oben genannten Klasse Main die File-Objekte entgegen und liest deren Inhalt zeilenweise ein. Beim Einlesen werden die Zeilen jeweils als SHA-1 Hash in eine ArrayList abgespeichert.
 
-<TODO: lcs-Methode>
+\texttt{lcs(List<String> list1, List<String> list2)}
+Die lcs-Methode benutzt den oben beschriebenen Algorithmus, sie bekommt 2 Listen als Eingabeparameter übergeben und gibt die längste gemeinsame Teilfolge ebenfalls als Liste zurück.
 
-<TODO: merge-Methode>
+
+\texttt{merge()}
+Für die Beschreibung der Methode sollen nun folgende Konventionen gelten:
+\begin{itemize}
+\item $V1 , V2$ und $S$ beschreiben die beiden geänderten Dateien/Listen und die Ausgangsdatei/Liste.
+\item $L_V1_S$ sei die längste Gemeinsame Teilfolge von $V1$ und $S$
+\item $L_V2_S$ sei die längste Gemeinsame Teilfolge von $V2$ und $S$
+\item $L_Ges$ sei die längste Gemeinsame Teilfolge von $L_V1_S$ und $L_V2_S$
+\end{itemize}
+
+Die merge-Methode benutzt die oben genannten LGT-Ergebnisse und versucht mit diesen die Dateien/Listen zu mergen indem die Methode über die einzelnen Elemente der geänderten Dateien/Listen iteriert.
+Das Ergebnis wir ebenfall in einer Liste gespeichert.
+Zur Ermittlung des Ergebnisses wird folgendes solange durchgeführt bis kein Element in einer der Listen verbleibt:
+\begin{itemize}
+\item Wenn $V1(i) = V2(j)$ gilt, füge die Zeile dem Ergebnis hinzu
+\item Ist $V1(i) = L_Ges(m)$ , füge die Zeile $V2(j)$ dem Ergebnis hinzu, da diese neu eingefügt wurde.
+\item Ist $V2(j) = L_Ges(m)$, füge die Zeile $V1(i)$ dem Ergebnis hinzu.
+\item Wenn $V1(i) = L_V1_S(k)$ gilt, füge $V2(j)$ dem Ergebnis hinzu, da $V1$ die Zeile beibehalten hat und in $V2$ eine Änderung stattfand.
+\item Wenn $V2(j) = L_V2_S(l)$ gilt, füge $V1(i)$ dem Ergebnis hinzu, da $V2$ die Zeile beibehalten hat und in $V1$ eine Änderung stattfand.
+\item Der Letze Fall beschreibt einen Merge-Konflikt da sowohl $V1(i)$ als auch $V2(j)$ neu eingefügt worden sind, deshalb werden beide Zeilen mit der in Abschnitt~\ref{sec:design} beschriebenen Notation dem Ergebnis hinzugefügt.
+\end{itemize}
+Enthält eine Liste keine Elemente mehr, ist die andere Liste länger. Somit werden die Elemente der längeren Liste dem Ergebnis hinzugefügt.
+
 
 
 \section{Test}
