@@ -89,7 +89,9 @@
 
 \section{Einleitung}
 \label{sec:intro}
-Ziel der Blockveranstaltung Qualitätssicherung ist es, in die Thematik der Software-Qualitätssicherung einzuführen. Kombiniert wird hierbei die Vorlesung mit einer praktischen Aufgabe, die einen Teilbereich des Vorlesungsinhalts umsetzt. Im Rahmen der Vorlesung wurde erläutert wie aus zwei gegebenen Sequenzen die Längste gemeinsame Teilfolge (LGT) mit einer maximalen Komplexität von $O(n^2)$ ermittelt wird. Mit Hilfe dieser Teilfolge ist es möglich eine Verschmelzung von Dateien durchzuführen und eine Teilmenge der entstehenden Konflikte automatisiert zu lösen.
+Ziel der Blockveranstaltung Qualitätssicherung ist es, in die Thematik der Software-Qualitätssicherung einzuführen.
+Kombiniert wird hierbei die Vorlesung mit einer praktischen Aufgabe, die einen Teilbereich des Vorlesungsinhalts umsetzt. Im Rahmen der Vorlesung wurde erläutert wie aus zwei gegebenen Sequenzen die Längste-Gemeinsame-Teilfolge (LGT) mit einer maximalen Komplexität von $O(n^2)$ ermittelt wird.
+Mit Hilfe dieser Teilfolge ist es möglich eine Verschmelzung von Dateien durchzuführen und eine Teilmenge der entstehenden Konflikte automatisiert zu lösen.
 Aufbauend auf die in der Vorlesung gelehrten Konzepte bestand die erste Aufgabe daraus, ein Programm zur Verschmelzung von zwei unabhängig weiterentwickelten Revision V1 und V2 aus der Ausgangsdatei V selbstständig ohne Zuhilfenahme bestehender Verschmelzungs-Algorithmen zu implementieren. Auftretende Konflikte sollten wenn möglich automatisiert gelöst werden. Im Fall von nicht lösbaren Konflikten soll der Anwender über den Konflikt informiert werden, so dass er eine manuelle Verschmelzung vornehmen kann.
 Die zweite Aufgabe bestand daraus, dass in der ersten Aufgabe enstandene Programm mittels geeigneter Testfälle und eines Programms zur Überprüfung der Zeilenabdeckung zu testen.
 
@@ -106,7 +108,9 @@ Das Programm übernimmt als Parameter die drei benötigten Dateien, mit deren Hi
 \begin{lstlisting}
 java -jar FileMerger V.txt V1.txt V2.txt
 \end{lstlisting}
-Wie dem Dateinamen zu entnehmen ist handelt es sich beim ersten Parameter um die Ausgangsdatei V, die beiden folgenden Parameter stellen die zu verschmelzenden Revisionen V1 und V2 dar. Dies wiederspricht der bei diff3 gängigen Reihenfolge V1, V, V2. Da die hier gewählte Reihenfolge den Gruppenmitgliedern natürlicher in der Benutzung erschien wurde sie anstelle des bei diff3 üblichen Schema gewählt.
+Wie dem Dateinamen zu entnehmen ist handelt es sich beim ersten Parameter um die Ausgangsdatei $V$,
+die beiden folgenden Parameter stellen die zu verschmelzenden Revisionen $V1$ und $V2$ dar.
+Dies wiederspricht der bei diff3 gängigen Reihenfolge $V1$, $V$, $V2$, jedoch halten die Gruppenmitglieder das gewählte Format für verständlicher.
 
 Das Ergebnis der Verschmelzung wird vom Programm auf der Standardausgabe ausgegeben. Konflikte werden hierbei unter Angabe der konfliktbehafteten Stelle in folgender Form angezeigt:
 
@@ -119,67 +123,89 @@ Die Ausgabe wird nicht in eine Datei geschrieben. Bei gewünschter Speicherung i
 
 \section{Algorithmus}
 \label{sec:algorithm}
-<TODO: Theorie und Algorithmus des LGT mit Verweis auf \citet{www:EP96}>
-Der Merger baut auf die Längste gemeinsame Teilfolge der Zeilen, von allen drei Dateiversionen, auf und kümmert sich um die darauffolgenden Konflikte.
+Bevor die Verschmelzung der Dateien durchgeführt werden kann, muss auf Zeilenebene die längste gemeinsame Teilfolge aller drei Eingabedateien ermittelt werden. Hierzu wird der unter \citet{www:EP96} beschriebenen Algorithmus verwendet. Dieser Algorithmus nutzt die aufsteigende dynamische Programmierung,
+welche eine deutlich kürzere Laufzeit im Vergleich zu einer rekursiven Ermittlung des LGT ermöglicht.
 
-Zur Ermittlung der längsten gemeinsamen Teilfolge, verwendeten wir den in \citet{www:EP96}> beschriebenen Algorithmus, und nutzt die aufsteigende dynamische Programmierung.
-Der beschriebene Algorithmus bekommt, in unserem Fall, 2 Listen als Eingabeparameter.
-Zunächst wird eine Matrix erstellt in der die Vergleichsresultate der einzelnen Listenelemente gespeichert sind.
-Die Iteration durch die genullte Matrix erfolgt aufsteigend, sie beginnt somit unten rechts und endet oben links.
-Mit einer Übereinstimmung zweier Listenelemente wird der Wert, abhängig vom diagonal unterliegendes Feldes, um 1 erhöht.
-Bei keiner weiteren Übereinstimmung erhalten die anderen Felder den Wert des rechts oder unten angrenzenden Feldes.
-Am Ende des Durchlaufes steht somit im ersten Feld der Matrix die Länge der längsten gemeinsamen Teilfolge.
+Der erwähnte Algorithmus zur Ermittlung des LGT bekommt setzt mit Hilfe der Eingabedateien die folgenden Schritte um:
 
+\begin{itemize}
+\item Erstellung einer genullten Matrix aus den Eingabedateien zwecks späterer Speicherung der Vergleichsresultate.
+\item Aufsteigende Iteration durch die genullte Matrix. Dieser Durchlauf beginnt rechts unten und endet links oben.
+\item Bei einer Übereinstimmung zweier Listenelemente wird der Wert, abhängig vom diagonal unterliegenden Feld, um 1 erhöht.
+\item Ist keine weitere Übereinstimmung vorhanden erhalten die anderen Felder den Wert des rechts bzw. unten angrenzenden Feldes.
+\end{itemize}
+
+Durch dieses Vorgehen ist am Ende des Durchlaufes im ersten Feld der Matrix die Anzahl ablesbar.
 Um nun die längste gemeinsame Teilfolge zu ermitteln muss erneut über die gewonnene Matrix und die einzelnen Listenelemente der Eingabeparameter iteriert werden.
-Hierfür werden die diagonalen Übergänge in der Matrix gesucht, da dort die Listenelemente übersteinstimmen, diese werden nun zum Ergebnis hinzugefügt.
-
-Der beschriebene Algorithmus ermittelt den LGT innerhalb von $O(nm)$ , bei unterschiedlich langen Dateien, und in $O(n^2)$ bei gleich langen Dateien, somit erfüllt der Algorithmus die gewünschte
-Laufzeitforderung.
+Hierfür werden die diagonalen Übergänge in der Matrix gesucht, da dort die Listenelemente übersteinstimmen. Diese werden dann zur Ergebnismenge hinzugefügt.
+Der beschriebene Algorithmus ermittelt den LGT innerhalb von $O(nm)$ , bei unterschiedlich langen Dateien, und in $O(n^2)$ bei gleich langen Dateien. Somit erfüllt der Algorithmus die gewünschte Laufzeitforderung.
 
 
 \section{Implementierung}
 \label{sec:implementation}
-Für die Implementierung des Algorithmus in einem lauffähigen Programm wurden in Java zwei Klassen erstellt.
+Für die Implementierung des Algorithmus wurden in Java ein Programm mit zwei Klassen erstellt, welche die Funktionalität beeinhalten.
 
 \subsection{Klasse Main}
 \label{sec:classmain}
-Die Klasse Main enthält als statische Methode die main-Methode, welche die Parameter übergeben bekommt. Dieser Methode obliegt es, die Parameter auf ihre Korrektheit zu prüfen und anschließend die in File-Objekte gewandelten Dateien an die die Verschmelzung durchführende Klasse weiter zu geben. Auch die Ausgabe des Verschmelzungsergebnis und eines eventuell notwendige Warnhinweises im Konfliktfall wird in dieser Klasse durchgeführt.
+Die Klasse \texttt{Main} enthält als statische Methode die \texttt{main}-Methode, welche die Eingabedateien als Parameter übergeben bekommt.
+Dieser Methode obliegt es, die Parameter auf ihre Korrektheit zu prüfen und anschließend die in \texttt{File}-Objekte gewandelten Dateien
+an die die Verschmelzung durchführende \texttt{Merge}-Klasse weiter zu geben.
+Das Verschmelzungsergebnis und der Warhnhinweis im Konfliktfall wird durch diese Klasse ausgegeben.
 
 \subsection{Klasse Merge}
 \label{sec:classmerge}
-Die Erstellung des LGT und die darauf aufbauenden Verschmelzung der Dateien V1 und V2 ist Aufgabe der Klasse Merge. Diese nimmt aus der oben genannten Klasse Main die File-Objekte entgegen und liest deren Inhalt zeilenweise ein. Beim Einlesen werden die Zeilen jeweils als SHA-1 Hash in eine ArrayList abgespeichert.
+Die Erstellung des LGT und die darauf aufbauende Verschmelzung der Dateien $V1$ und $V2$ ist Aufgabe der Klasse \texttt{Merge}. Der Konstruktur nimmt aus der oben genannten \texttt{Main}-Klasse die \texttt{File}-Objekte entgegen. Danach kann mit der \texttt{mergeFiles}-Methode die Verschmelzung durchgeführt werden, wobei diese Methode mittels einen Boolean anzeigt ob die Verschmelzung erfolgreich war. Die Ergebnisliste kann anschließend über die \texttt{getMergedList}-Methode abgerufen werden. Dies ermöglicht es, die Überprüfung ob die Verschmelzung möglich ist von der Rückgabe der Ergebnisliste zu trennen.
 
-\texttt{lcs(List<String> list1, List<String> list2)}
-Die lcs-Methode benutzt den oben beschriebenen Algorithmus, sie bekommt 2 Listen als Eingabeparameter übergeben und gibt die längste gemeinsame Teilfolge ebenfalls als Liste zurück.
+\subsubsection{mergeFiles()}
+\label{sec:mergefiles}
+Innerhalb dieser Datei wird aus den Eingabedateien durch die \texttt{makeHash}-Methode Hashlisten erstellt. Aus diesen wiederum wird mit der \texttt{lcs}-Methode drei Listen erzeugt.
+Bei diesen Listen handelt es sich um die längste gemeinsame Teilfolge der Kombinationen aus $V$ und $V1$, $V$ und $V2$ und aus den beiden zuvor erstellten Listen. Mit Hilfe dieser Listen verschmelzt die \texttt{merge}-Methode die Dateien $V1$ und $V2$. Falls die Verschmelzung ohne Fehler möglich war gibt die Methode \texttt{true} zurück, im Fehlerfall \texttt{false}.
 
+\subsubsection{makeHash(File file)}
+\label{sec:makehash}
+Der Inhalt der übergebenen Datei wird durch die \texttt{makeHash}-Methode zeilenweise eingelesen.
+Die eingelesenen Zeilen werden dann als SHA-1 Hash in eine \texttt{ArrayList} abgespeichert. Da es sich hierbei um eine sortierte Liste handelt kann im weiteren Verlauf mittels Indexzugriff auf die Hashwerte jeder Zeile zugegriffen werden.
 
-\texttt{merge()}
-Für die Beschreibung der Methode sollen nun folgende Konventionen gelten:
+\subsubsection{lcs(List<String> list1, List<String> list2)}
+\label{sec:lcs}
+Die übergebenen Listen benutzt die \texttt{lcs}-Methode um den oben beschriebenen Algorithmus zur Ermittlung der längsten gemeinsamen Teilfolge zu implementieren.
+Hierzu werden immer zwei Listen als Eingabeparameter übergeben, aus diesen die längste gemeinsame Teilfolge ermittelt und diese als ArrayList zurück gegeben.
+
+\subsubsection{merge()}
+\label{sec:merge}
+Mit der \texttt{merge}-Methode wird die eigentliche Verschmelzung, unter Zuhilfenahme der LGT-Listen, erstellt.
+
+Für die Beschreibung der Methode sollen folgende Definitionen gelten:
 \begin{itemize}
-\item $V1 , V2$ und $S$ beschreiben die beiden geänderten Dateien/Listen und die Ausgangsdatei/Liste.
-\item $L_V1_S$ sei die längste Gemeinsame Teilfolge von $V1$ und $S$
-\item $L_V2_S$ sei die längste Gemeinsame Teilfolge von $V2$ und $S$
-\item $L_Ges$ sei die längste Gemeinsame Teilfolge von $L_V1_S$ und $L_V2_S$
+\item $V1 , V2$ und $V$ beschreiben die beiden geänderten Dateien/Listen und die Ausgangsdatei/Liste.
+\item $L_{V_{1}V}$ sei die Längste-Gemeinsame-Teilfolge von $V1$ und $V$
+\item $L_{V_{2}V}$ sei die Längste-Gemeinsame-Teilfolge von $V2$ und $V$
+\item $L_{Ges}$ sei die Längste-Gemeinsame-Teilfolge von $L_{V_{1}V}$ und $L_{V_{2}V}$
 \end{itemize}
 
-Die merge-Methode benutzt die oben genannten LGT-Ergebnisse und versucht mit diesen die Dateien/Listen zu mergen indem die Methode über die einzelnen Elemente der geänderten Dateien/Listen iteriert.
-Das Ergebnis wir ebenfall in einer Liste gespeichert.
+Die \texttt{merge}-Methode benutzt nun die oben genannten LGT-Listen und versucht mit diesen die Dateien/Listen zu verschmelzen,
+indem die Methode über die einzelnen Elemente der geänderten Dateien/Listen iteriert. Diese Verschmelzung wir in einer Ergebnisliste gespeichert.
 Zur Ermittlung des Ergebnisses wird folgendes solange durchgeführt bis kein Element in einer der Listen verbleibt:
 \begin{itemize}
 \item Wenn $V1(i) = V2(j)$ gilt, füge die Zeile dem Ergebnis hinzu
-\item Ist $V1(i) = L_Ges(m)$ , füge die Zeile $V2(j)$ dem Ergebnis hinzu, da diese neu eingefügt wurde.
-\item Ist $V2(j) = L_Ges(m)$, füge die Zeile $V1(i)$ dem Ergebnis hinzu.
-\item Wenn $V1(i) = L_V1_S(k)$ gilt, füge $V2(j)$ dem Ergebnis hinzu, da $V1$ die Zeile beibehalten hat und in $V2$ eine Änderung stattfand.
-\item Wenn $V2(j) = L_V2_S(l)$ gilt, füge $V1(i)$ dem Ergebnis hinzu, da $V2$ die Zeile beibehalten hat und in $V1$ eine Änderung stattfand.
-\item Der Letze Fall beschreibt einen Merge-Konflikt da sowohl $V1(i)$ als auch $V2(j)$ neu eingefügt worden sind, deshalb werden beide Zeilen mit der in Abschnitt~\ref{sec:design} beschriebenen Notation dem Ergebnis hinzugefügt.
+\item Ist $V1(i) = L_{Ges}(m)$ , füge die Zeile $V2(j)$ dem Ergebnis hinzu, da diese neu eingefügt wurde.
+\item Ist $V2(j) = L_{Ges}(m)$, füge die Zeile $V1(i)$ dem Ergebnis hinzu.
+\item Wenn $V1(i) = L_{V_{1}V}(k)$ gilt, füge $V2(j)$ dem Ergebnis hinzu, da $V1$ die Zeile beibehalten hat und in $V2$ eine Änderung stattfand.
+\item Wenn $V2(j) = L_{V_{2}V}(l)$ gilt, füge $V1(i)$ dem Ergebnis hinzu, da $V2$ die Zeile beibehalten hat und in $V1$ eine Änderung stattfand.
+\item Der letzte Fall beschreibt einen Konflikt bei der Verschmelzung, da sowohl $V1(i)$ als auch $V2(j)$ neu eingefügt worden sind. In diesem Fall werden beide Zeilen mit der in Abschnitt~\ref{sec:design} beschriebenen Fehlermeldung der Ergebnisliste hinzugefügt.
 \end{itemize}
-Enthält eine Liste keine Elemente mehr, ist die andere Liste länger. Somit werden die Elemente der längeren Liste dem Ergebnis hinzugefügt.
-
+Enthält eine Liste keine Elemente mehr, so werden die Elemente der längeren Liste dem Ergebnis hinzugefügt.
 
 
 \section{Test}
 \label{sec:test}
-<TODO: Test der Zeilenabdeckung mit eclemma>
+Wie in Abschnitt~\ref{sec:intro} beschrieben sollte als zweite Aufgabe mittels geeigneter Testfälle die Zeilenabdeckung getestet werden.
+Hierbei sollte eine Zeilenabdeckung von 100\%, sowohl für den Quelltext des Prorgamms als auch bei den Testfällen erreicht werden.
+Explizit gefordert war neben der Zeilenabdeckung ein Testfall, bei dem nicht genügend Arbeitsspeicher beim Einlesen der Datei zu Verfügung steht.
+Da als IDE Eclipse gewählt wurde entschieden sich die Gruppenmitglieder für das \citep{www:ECLEMMA} zum Testen der Zeilenabdeckung.
+
+<TODO: Mehr Inhalt zum Ablauf und den Testfällen>
+
 
 <TODO: Zusammenführung der Testergebnisse um 100\% Zeilenabdeckung zu erreichen>
 
@@ -188,6 +214,6 @@ Enthält eine Liste keine Elemente mehr, ist die andere Liste länger. Somit wer
 \appendix
 
 \bibliographystyle{plainnat}
-\bibliography{EP96}
+\bibliography{BIB}
 
 \end{document}

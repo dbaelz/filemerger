@@ -3,7 +3,7 @@ NAME=Ausarbeitung
 LATEX=xelatex
 BIBTEX=bibtex
 
-SRC=${NAME}.tex EP96.bib
+SRC=${NAME}.tex BIB.bib
 
 .PHONY: all clean
 
