@@ -93,11 +93,15 @@ Ziel der Blockveranstaltung Qualitätssicherung ist es, in die Thematik der Soft
 Kombiniert wird hierbei die Vorlesung mit einer praktischen Aufgabe, die einen Teilbereich des Vorlesungsinhalt umsetzt. Im Rahmen der Vorlesung wurde erläutert wie aus zwei gegebenen Sequenzen die Längste-Gemeinsame-Teilfolge (LGT) mit einer maximalen Komplexität von $O(n^2)$ ermittelt wird.
 Mit Hilfe dieser Teilfolge ist es möglich eine Verschmelzung von Dateien durchzuführen und eine Teilmenge der entstehenden Konflikte automatisiert zu lösen.
 Aufbauend auf die in der Vorlesung gelehrten Konzepte bestand die erste Aufgabe daraus, ein Programm zur Verschmelzung von zwei unabhängig weiterentwickelten Revision V1 und V2 aus der Ausgangsdatei V selbstständig ohne Zuhilfenahme bestehender Verschmelzungs-Algorithmen zu implementieren. Auftretende Konflikte sollten wenn möglich automatisiert gelöst werden. Im Fall von nicht lösbaren Konflikten soll der Anwender über den Konflikt informiert werden, so dass er eine manuelle Verschmelzung vornehmen kann.
-Die zweite Aufgabe bestand daraus, dass in der ersten Aufgabe enstandene Programm mittels geeigneter Testfälle und eines Programms zur Überprüfung der Zeilenabdeckung zu testen.
+Die zweite Aufgabe bestand daraus, dass in der ersten Aufgabe erstellte Programm mittels geeigneter Testfälle und eines Programms zur Überprüfung der Zeilenabdeckung zu testen.
+
+
+Der Quellcode des Programm, die Testfälle und diese Dokumentationen finden sich unter \url{https://github.com/Ari42/filemerger}.
 
 \section{Wahl der Programmiersprache}
 \label{sec:proglang}
-Für die Aufgaben war die Implementierungssprache freigestellt, so fern beide Aufgaben unter den oben genannten Bedingungen mit der Sprache realisierbar waren. Aufgrund der Tatsache, dass beide Gruppenmitglieder in der Programmierung mit Java die größte Erfahrung haben und Toolunterstützung zum Test der Zeilenabdeckung vorhanden ist wurde diese Programmiersprache gewählt.
+Für die Aufgaben war die Implementierungssprache freigestellt, so fern beide Aufgaben unter den oben genannten Bedingungen mit der Sprache realisierbar waren.
+Aufgrund der Tatsache, dass beide Gruppenmitglieder in der Programmierung mit Java die größte Erfahrung haben und mit \citep{www:ECLEMMA} eine bereits verwendetes Tool zum Test der Zeilenabdeckung vorhanden ist wurde diese Programmiersprache gewählt.
 
 \section{Design der Benutzerschnittstellen}
 \label{sec:design}
@@ -110,7 +114,7 @@ java -jar FileMerger V.txt V1.txt V2.txt
 \end{lstlisting}
 Wie dem Dateinamen zu entnehmen ist handelt es sich beim ersten Parameter um die Ausgangsdatei $V$,
 die beiden folgenden Parameter stellen die zu verschmelzenden Revisionen $V1$ und $V2$ dar.
-Dies wirdderspricht der bei diff3 gängigen Reihenfolge $V1$, $V$, $V2$, jedoch halten die Gruppenmitglieder das gewählte Format für verständlicher.
+Dies widerspricht der bei diff3 gängigen Reihenfolge $V1$, $V$, $V2$, jedoch halten die Gruppenmitglieder das gewählte Format für verständlicher.
 
 Das Ergebnis der Verschmelzung wird vom Programm auf der Standardausgabe ausgegeben. Konflikte werden hierbei unter Angabe der konfliktbehafteten Stelle in folgender Form angezeigt:
 
@@ -123,7 +127,8 @@ Die Ausgabe wird nicht in eine Datei geschrieben. Bei gewünschter Speicherung i
 
 \section{Algorithmus}
 \label{sec:algorithm}
-Bevor die Verschmelzung der Dateien durchgeführt werden kann, muss auf Zeilenebene die längste gemeinsame Teilfolge aller drei Eingabedateien ermittelt werden. Hierzu wird der unter \citet{www:EP96} beschriebenen Algorithmus verwendet. Dieser Algorithmus nutzt die aufsteigende dynamische Programmierung,
+Bevor die Verschmelzung der Dateien durchgeführt werden kann, muss auf Zeilenebene die längste gemeinsame Teilfolge aller drei Eingabedateien ermittelt werden.
+Hierzu wird der unter \citet{www:EP96} beschriebenen Algorithmus verwendet. Dieser Algorithmus nutzt die aufsteigende dynamische Programmierung,
 welche eine deutlich kürzere Laufzeit im Vergleich zu einer rekursiven Ermittlung des LGT ermöglicht.
 
 Der erwähnte Algorithmus zur Ermittlung des LGT bekommt setzt mit Hilfe der Eingabedateien die folgenden Schritte um:
@@ -199,16 +204,50 @@ Enthält eine Liste keine Elemente mehr, so werden die Elemente der längeren Li
 
 \section{Test}
 \label{sec:test}
+
 Wie in Abschnitt~\ref{sec:intro} beschrieben sollte als zweite Aufgabe mittels geeigneter Testfälle die Zeilenabdeckung getestet werden.
 Hierbei sollte eine Zeilenabdeckung von 100\%, sowohl für den Quelltext des Programm als auch bei den Testfällen erreicht werden.
-Explizit gefordert war neben der Zeilenabdeckung ein Testfall, bei dem nicht genügend Arbeitsspeicher beim Einlesen der Datei zu Verfügung steht.
-Da als IDE Eclipse gewählt wurde entschieden sich die Gruppenmitglieder für das \citep{www:ECLEMMA} zum Testen der Zeilenabdeckung.
+Gefordert war neben der Zeilenabdeckung des bestehenden Programm auch ein Testfall, bei dem nicht genügend Arbeitsspeicher beim Einlesen der Datei zu Verfügung steht.
 
-<TODO: Mehr Inhalt zum Ablauf und den Testfällen>
+Um diese Anforderungen umzusetzen wurden Unit-Tests mit Hilfe von \citep{www:JUNIT} erstellt. Die Zeilenabdeckung der Unit-Tests wurde mit dem \citep{www:ECLEMMA} überprüft, welches sich ebenso wie JUnit in die von den Gruppenmitgliedern genutzte Entwicklungsumgebung Eclipse eingliedern lässt.
 
+\subsection{Klasse FileErros}
+\label{sec:fileerrors}
+In der Klasse \texttt{FileErrors} wurden Fehlerfälle abgedeckt, die mit den Parametern bei Programmstart zusammen hängen.
+Hierbei wurde die korrekte Anzahl der Parameter getestet, da die Verschmelzung nur bei genau drei Dateien möglich ist.
+Dazu wurden jeweils den Testfällen zu wenige, zu viel als auch nicht vorhandene Dateinamen übergeben.
 
-<TODO: Zusammenführung der Testergebnisse um 100\% Zeilenabdeckung zu erreichen>
+\subsection{Klasse TestFileUnreadable}
+\label{sec:fileunreadable}
+Ziel der Klasse \texttt{TestFileUnreadable} war es, das Verhalten des Programm bei nicht lesbaren Eingabedateien zu testen.
+Hierzu wurde eine Datei auf Dateisystemebene als nicht lesbar gekennzeichnet und anschließend im Testfall übergeben.
+Um diesen Testfall auch für Dritte, welche den Quelltext aus dem oben genannten Repository herunterladen, durchführbar zu machen, wurde in der dem Projekt beiliegenden \texttt{README.md} ein Hinweis eingefügt.
 
+\subsection{Klasse FilesEqual}
+\label{sec:filesequal}
+Sind die zu verschmelzenden Dateien identisch, so ist die Erstellung des LGT und das Verschmelzen nicht notwendig. Statt dessen wird die erste Datei als Verschmelzungsergebnis ausgegeben, was die Laufzeit des Programm erheblich verkürzt. Um diesen Fall zu testen wurde in der \texttt{FilesEqual}-Klasse identische, zu verschmelzende Dateien.
+
+\subsection{Klasse GivenFiles}
+\label{sec:givenfiles}
+Die vom Betreuer ausgegeben Dateien zum Test des Programmverhalten wurden in der Klasse \texttt{GivenFiles} getestet. Mit diesen Dateien konnten aufgrund ihres Aufbaus einen Großteul der Zeilenabdeckung abgedeckt werden. Das aus dieser Verschmelzung erzeugte Verschmelzungsergebnis diente zudem bei der Abgabe der ersten Aufgabe zur Überprüfung der Korrektheit des Algorithmus.
+
+\subsection{Klasse FilesLonger}
+\label{sec:fileslonger}
+Ein Spezialfall deckt die Klasse \texttt{FilesLonger} ab. Enthält eine der beiden Dateien keine Elemente mehr, so werden die Elemente der längeren Datei dem Ergebnis hinzugefügt.
+Um dieses Verhalten abzudecken wurden für die beiden Fälle, dass die erste bzw. zweite Datei länger ist, Unit-Tests geschrieben.
+
+\subsection{Klasse NoEnoughMemory}
+\label{sec:notenoughmemory}
+Wie oben beschrieben sollte auch abgedeckt werden, dass nicht genügend Arbeitsspeicher zum Einlesen der Dateien zur Verfügung steht.
+Da dieser Fall bei einer standardgemäß konfigurierten Java Virtual Machine nicht auftritt mussten an dieser Anpassungen vorgenommen werden.
+Als erster Schritt wurde eine weitere Startkonfiguration für die Zeilenabdeckung erzeugt. Dieser Konfiguration wurde als VM-Parameter \texttt{-Xmx5M} übergeben.
+Dieser Parameter begrenzt den verfügbaren Heapspeicher der JVM auf maximal 5 MB. In Verbindung mit einer 5 MB großen Testdatei konnte so das gewünschte Verhalten provoziert werden.
+Im Anschluss wurde ein Testfall geschrieben welcher die Datei innerhalb einer \texttt{try/catch}\-Struktur aufruft und entsprechend eine \texttt{OutOfMemoryError}-Exception wirft.
+
+Da nun zwei Startkonfigurationen vorhanden waren, welche gemeinsam das gesamte Verhalten abdecken, mussten diese kombiniert werden.
+Die Gruppenmitglieder nutzten hierfür die Möglichkeit innerhalb des \citep{www:ECLEMMA} zwei Testdurchläufe zu verknüpfen.
+Dadurch ist es möglich, sowohl mit ausreichendem als auch mit zu geringem Arbeitsspeicher zu testen und anschließend durch Kombination 100\% Testabdeckung zu erhalten.
+Um diesen Testfall auch für Dritte, welche den Quelltext aus dem oben genannten Repository herunterladen, durchführbar zu machen, wurde in der dem Projekt beiliegenden \texttt{README.md} ein Hinweis eingefügt.
 
 \clearpage
 \appendix
