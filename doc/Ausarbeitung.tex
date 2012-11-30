@@ -46,13 +46,13 @@
 \fancyhead[LE,RO]{\rightmark}
 \fancyhead[LO,RE]{\leftmark}
 \fancyfoot[LE,RO]{\thepage}
-\fancyfoot[LO,RE]{Qualtitätssicherung Wintersemester 2012/2013}
+\fancyfoot[LO,RE]{Qualitätssicherung Wintersemester 2012/2013}
 \fancypagestyle{plain}{%
 	\fancyhf{}
 	\renewcommand{\headrulewidth}{0pt}
 	\renewcommand{\footrulewidth}{0.5pt}
 	\fancyfoot[LE,RO]{\thepage}
-	\fancyfoot[LO,RE]{Qualtitätssicherung Wintersemester 2012/2013}
+	\fancyfoot[LO,RE]{Qualitätssicherung Wintersemester 2012/2013}
 }
 
 % no indented paragraphs
@@ -90,7 +90,7 @@
 \section{Einleitung}
 \label{sec:intro}
 Ziel der Blockveranstaltung Qualitätssicherung ist es, in die Thematik der Software-Qualitätssicherung einzuführen.
-Kombiniert wird hierbei die Vorlesung mit einer praktischen Aufgabe, die einen Teilbereich des Vorlesungsinhalts umsetzt. Im Rahmen der Vorlesung wurde erläutert wie aus zwei gegebenen Sequenzen die Längste-Gemeinsame-Teilfolge (LGT) mit einer maximalen Komplexität von $O(n^2)$ ermittelt wird.
+Kombiniert wird hierbei die Vorlesung mit einer praktischen Aufgabe, die einen Teilbereich des Vorlesungsinhalt umsetzt. Im Rahmen der Vorlesung wurde erläutert wie aus zwei gegebenen Sequenzen die Längste-Gemeinsame-Teilfolge (LGT) mit einer maximalen Komplexität von $O(n^2)$ ermittelt wird.
 Mit Hilfe dieser Teilfolge ist es möglich eine Verschmelzung von Dateien durchzuführen und eine Teilmenge der entstehenden Konflikte automatisiert zu lösen.
 Aufbauend auf die in der Vorlesung gelehrten Konzepte bestand die erste Aufgabe daraus, ein Programm zur Verschmelzung von zwei unabhängig weiterentwickelten Revision V1 und V2 aus der Ausgangsdatei V selbstständig ohne Zuhilfenahme bestehender Verschmelzungs-Algorithmen zu implementieren. Auftretende Konflikte sollten wenn möglich automatisiert gelöst werden. Im Fall von nicht lösbaren Konflikten soll der Anwender über den Konflikt informiert werden, so dass er eine manuelle Verschmelzung vornehmen kann.
 Die zweite Aufgabe bestand daraus, dass in der ersten Aufgabe enstandene Programm mittels geeigneter Testfälle und eines Programms zur Überprüfung der Zeilenabdeckung zu testen.
@@ -102,7 +102,7 @@ Für die Aufgaben war die Implementierungssprache freigestellt, so fern beide Au
 \section{Design der Benutzerschnittstellen}
 \label{sec:design}
 Um das Programm möglichst flexibel verwenden zu können wurde es als Kommandozeilenprogramm gestaltet.
-Das Programm übernimmt als Parameter die drei benötigten Dateien, mit deren Hilfe die Drei-Wege-Verschmelzung durchgeführt wird. Das Programms kann in der Kommandozeile wie folgt aufgerufen werden:
+Das Programm übernimmt als Parameter die drei benötigten Dateien, mit deren Hilfe die Drei-Wege-Verschmelzung durchgeführt wird. Das Programm kann in der Kommandozeile wie folgt aufgerufen werden:
 
 \lstset{language=sh, numbers=none, xleftmargin=0pt}
 \begin{lstlisting}
@@ -110,7 +110,7 @@ java -jar FileMerger V.txt V1.txt V2.txt
 \end{lstlisting}
 Wie dem Dateinamen zu entnehmen ist handelt es sich beim ersten Parameter um die Ausgangsdatei $V$,
 die beiden folgenden Parameter stellen die zu verschmelzenden Revisionen $V1$ und $V2$ dar.
-Dies wiederspricht der bei diff3 gängigen Reihenfolge $V1$, $V$, $V2$, jedoch halten die Gruppenmitglieder das gewählte Format für verständlicher.
+Dies wirdderspricht der bei diff3 gängigen Reihenfolge $V1$, $V$, $V2$, jedoch halten die Gruppenmitglieder das gewählte Format für verständlicher.
 
 Das Ergebnis der Verschmelzung wird vom Programm auf der Standardausgabe ausgegeben. Konflikte werden hierbei unter Angabe der konfliktbehafteten Stelle in folgender Form angezeigt:
 
@@ -137,24 +137,24 @@ Der erwähnte Algorithmus zur Ermittlung des LGT bekommt setzt mit Hilfe der Ein
 
 Durch dieses Vorgehen ist am Ende des Durchlaufes im ersten Feld der Matrix die Anzahl ablesbar.
 Um nun die längste gemeinsame Teilfolge zu ermitteln muss erneut über die gewonnene Matrix und die einzelnen Listenelemente der Eingabeparameter iteriert werden.
-Hierfür werden die diagonalen Übergänge in der Matrix gesucht, da dort die Listenelemente übersteinstimmen. Diese werden dann zur Ergebnismenge hinzugefügt.
+Hierfür werden die diagonalen Übergänge in der Matrix gesucht, da dort die Listenelemente übereinstimmen. Diese werden dann zur Ergebnismenge hinzugefügt.
 Der beschriebene Algorithmus ermittelt den LGT innerhalb von $O(nm)$ , bei unterschiedlich langen Dateien, und in $O(n^2)$ bei gleich langen Dateien. Somit erfüllt der Algorithmus die gewünschte Laufzeitforderung.
 
 
 \section{Implementierung}
 \label{sec:implementation}
-Für die Implementierung des Algorithmus wurden in Java ein Programm mit zwei Klassen erstellt, welche die Funktionalität beeinhalten.
+Für die Implementierung des Algorithmus wurden in Java ein Programm mit zwei Klassen erstellt, welche die Funktionalität beinhalten.
 
 \subsection{Klasse Main}
 \label{sec:classmain}
 Die Klasse \texttt{Main} enthält als statische Methode die \texttt{main}-Methode, welche die Eingabedateien als Parameter übergeben bekommt.
 Dieser Methode obliegt es, die Parameter auf ihre Korrektheit zu prüfen und anschließend die in \texttt{File}-Objekte gewandelten Dateien
 an die die Verschmelzung durchführende \texttt{Merge}-Klasse weiter zu geben.
-Das Verschmelzungsergebnis und der Warhnhinweis im Konfliktfall wird durch diese Klasse ausgegeben.
+Das Verschmelzungsergebnis und der Warnhinweis im Konfliktfall wird durch diese Klasse ausgegeben.
 
 \subsection{Klasse Merge}
 \label{sec:classmerge}
-Die Erstellung des LGT und die darauf aufbauende Verschmelzung der Dateien $V1$ und $V2$ ist Aufgabe der Klasse \texttt{Merge}. Der Konstruktur nimmt aus der oben genannten \texttt{Main}-Klasse die \texttt{File}-Objekte entgegen. Danach kann mit der \texttt{mergeFiles}-Methode die Verschmelzung durchgeführt werden, wobei diese Methode mittels einen Boolean anzeigt ob die Verschmelzung erfolgreich war. Die Ergebnisliste kann anschließend über die \texttt{getMergedList}-Methode abgerufen werden. Dies ermöglicht es, die Überprüfung ob die Verschmelzung möglich ist von der Rückgabe der Ergebnisliste zu trennen.
+Die Erstellung des LGT und die darauf aufbauende Verschmelzung der Dateien $V1$ und $V2$ ist Aufgabe der Klasse \texttt{Merge}. Der Konstruktor nimmt aus der oben genannten \texttt{Main}-Klasse die \texttt{File}-Objekte entgegen. Danach kann mit der \texttt{mergeFiles}-Methode die Verschmelzung durchgeführt werden, wobei diese Methode mittels einen Boolean anzeigt ob die Verschmelzung erfolgreich war. Die Ergebnisliste kann anschließend über die \texttt{getMergedList}-Methode abgerufen werden. Dies ermöglicht es, die Überprüfung ob die Verschmelzung möglich ist von der Rückgabe der Ergebnisliste zu trennen.
 
 \subsubsection{mergeFiles()}
 \label{sec:mergefiles}
@@ -200,7 +200,7 @@ Enthält eine Liste keine Elemente mehr, so werden die Elemente der längeren Li
 \section{Test}
 \label{sec:test}
 Wie in Abschnitt~\ref{sec:intro} beschrieben sollte als zweite Aufgabe mittels geeigneter Testfälle die Zeilenabdeckung getestet werden.
-Hierbei sollte eine Zeilenabdeckung von 100\%, sowohl für den Quelltext des Prorgamms als auch bei den Testfällen erreicht werden.
+Hierbei sollte eine Zeilenabdeckung von 100\%, sowohl für den Quelltext des Programm als auch bei den Testfällen erreicht werden.
 Explizit gefordert war neben der Zeilenabdeckung ein Testfall, bei dem nicht genügend Arbeitsspeicher beim Einlesen der Datei zu Verfügung steht.
 Da als IDE Eclipse gewählt wurde entschieden sich die Gruppenmitglieder für das \citep{www:ECLEMMA} zum Testen der Zeilenabdeckung.
 
