@@ -72,7 +72,7 @@
 	\includegraphics[width=0.9\linewidth]{img/hska_logo.png}
 }
 
-\title{Qualitätssicherung}
+\title{Ausarbeitung Qualitätssicherung}
 \author{%
 	Daniel Bälz, Mat.-Nr.: 31074 \\
 	Fabian Freimüller, Mat.-Nr.: 30684 \\
@@ -131,7 +131,7 @@ Bevor die Verschmelzung der Dateien durchgeführt werden kann, muss auf Zeileneb
 Hierzu wird der unter \citet{www:EP96} beschriebenen Algorithmus verwendet. Dieser Algorithmus nutzt die aufsteigende dynamische Programmierung,
 welche eine deutlich kürzere Laufzeit im Vergleich zu einer rekursiven Ermittlung des LGT ermöglicht.
 
-Der erwähnte Algorithmus zur Ermittlung des LGT bekommt setzt mit Hilfe der Eingabedateien die folgenden Schritte um:
+Der erwähnte Algorithmus zur Ermittlung des LGT setzt mit Hilfe der Eingabedateien die folgenden Schritte um:
 
 \begin{itemize}
 \item Erstellung einer genullten Matrix aus den Eingabedateien zwecks späterer Speicherung der Vergleichsresultate.
@@ -143,12 +143,12 @@ Der erwähnte Algorithmus zur Ermittlung des LGT bekommt setzt mit Hilfe der Ein
 Durch dieses Vorgehen ist am Ende des Durchlaufes im ersten Feld der Matrix die Länge der Teilfolge ablesbar.
 Um nun die längste gemeinsame Teilfolge zu ermitteln muss erneut über die gewonnene Matrix und die einzelnen Listenelemente der Eingabeparameter iteriert werden.
 Hierfür werden die diagonalen Übergänge in der Matrix gesucht, da dort die Listenelemente übereinstimmen. Diese werden dann zur Ergebnismenge hinzugefügt.
-Der beschriebene Algorithmus ermittelt den LGT innerhalb von $O(nm)$ , bei unterschiedlich langen Dateien, und in $O(n^2)$ bei gleich langen Dateien. Somit erfüllt der Algorithmus die gewünschte Laufzeitforderung.
+Der beschriebene Algorithmus ermittelt den LGT innerhalb von $O(nm)$, bei unterschiedlich langen Dateien, und in $O(n^2)$ bei gleich langen Dateien. Somit erfüllt der Algorithmus die gewünschte Laufzeitanforderung.
 
 
 \section{Implementierung}
 \label{sec:implementation}
-Für die Implementierung des Algorithmus wurden in Java ein Programm mit zwei Klassen erstellt, welche die Funktionalität beinhalten.
+Für die Implementierung des Algorithmus wurde in Java ein Programm mit zwei Klassen erstellt welche die Funktionalität beinhalten.
 
 \subsection{Klasse Main}
 \label{sec:classmain}
@@ -159,12 +159,12 @@ Das Verschmelzungsergebnis und der Warnhinweis im Konfliktfall wird durch diese 
 
 \subsection{Klasse Merge}
 \label{sec:classmerge}
-Die Erstellung des LGT und die darauf aufbauende Verschmelzung der Dateien $V1$ und $V2$ ist Aufgabe der Klasse \texttt{Merge}. Der Konstruktor nimmt aus der oben genannten \texttt{Main}-Klasse die \texttt{File}-Objekte entgegen. Danach kann mit der \texttt{mergeFiles}-Methode die Verschmelzung durchgeführt werden, wobei diese Methode mittels einen Boolean anzeigt ob die Verschmelzung erfolgreich war. Die Ergebnisliste kann anschließend über die \texttt{getMergedList}-Methode abgerufen werden. Dies ermöglicht es, die Überprüfung ob die Verschmelzung möglich ist von der Rückgabe der Ergebnisliste zu trennen.
+Die Erstellung des LGT und die darauf aufbauende Verschmelzung der Dateien $V1$ und $V2$ ist Aufgabe der Klasse \texttt{Merge}. Der Konstruktor nimmt aus der oben genannten \texttt{Main}-Klasse die \texttt{File}-Objekte entgegen. Danach kann mit der \texttt{mergeFiles}-Methode die Verschmelzung durchgeführt werden, wobei diese Methode mittels eines Boolean anzeigt ob die Verschmelzung erfolgreich war. Die Ergebnisliste kann anschließend über die \texttt{getMergedList}-Methode abgerufen werden. Dies ermöglicht es, die Überprüfung ob die Verschmelzung möglich ist von der Rückgabe der Ergebnisliste zu trennen.
 
 \subsubsection{mergeFiles()}
 \label{sec:mergefiles}
-Innerhalb dieser Datei wird aus den Eingabedateien durch die \texttt{makeHash}-Methode Hashlisten erstellt. Aus diesen wiederum wird mit der \texttt{lcs}-Methode drei Listen erzeugt.
-Bei diesen Listen handelt es sich um die längste gemeinsame Teilfolge der Kombinationen aus $V$ und $V1$, $V$ und $V2$ und aus den beiden zuvor erstellten Listen. Mit Hilfe dieser Listen verschmelzt die \texttt{merge}-Methode die Dateien $V1$ und $V2$. Falls die Verschmelzung ohne Fehler möglich war gibt die Methode \texttt{true} zurück, im Fehlerfall \texttt{false}.
+Innerhalb dieser Methode wird aus den Eingabedateien durch die \texttt{makeHash}-Methode Hashlisten erstellt. Aus diesen wiederum wird mit der \texttt{lcs}-Methode drei Listen erzeugt.
+Bei diesen Listen handelt es sich um die längste gemeinsame Teilfolge der Kombinationen aus $V$ und $V1$, $V$ und $V2$ und aus den beiden zuvor erstellten Listen. Mit Hilfe dieser Listen verschmelzt die \texttt{merge}-Methode die Dateien $V1$ und $V2$. Falls die Verschmelzung ohne Fehler möglich war gibt die \texttt{mergeFiles}-Methode \texttt{true} zurück, im Fehlerfall \texttt{false}.
 
 \subsubsection{makeHash(File file)}
 \label{sec:makehash}
@@ -192,7 +192,7 @@ Die \texttt{merge}-Methode benutzt nun die oben genannten LGT-Listen und versuch
 indem die Methode über die einzelnen Elemente der geänderten Dateien/Listen iteriert. Diese Verschmelzung wir in einer Ergebnisliste gespeichert.
 Zur Ermittlung des Ergebnisses wird folgendes solange durchgeführt bis kein Element in einer der Listen verbleibt:
 \begin{itemize}
-\item Wenn $V1(i) = V2(j)$ gilt, füge die Zeile dem Ergebnis hinzu
+\item Wenn $V1(i) = V2(j)$ gilt, füge die Zeile dem Ergebnis hinzu.
 \item Ist $V1(i) = L_{Ges}(m)$ , füge die Zeile $V2(j)$ dem Ergebnis hinzu, da diese neu eingefügt wurde.
 \item Ist $V2(j) = L_{Ges}(m)$, füge die Zeile $V1(i)$ dem Ergebnis hinzu.
 \item Wenn $V1(i) = L_{V_{1}V}(k)$ gilt, füge $V2(j)$ dem Ergebnis hinzu, da $V1$ die Zeile beibehalten hat und in $V2$ eine Änderung stattfand.
@@ -207,13 +207,13 @@ Enthält eine Liste keine Elemente mehr, so werden die Elemente der längeren Li
 
 Wie in Abschnitt~\ref{sec:intro} beschrieben sollte als zweite Aufgabe mittels geeigneter Testfälle die Zeilenabdeckung getestet werden.
 Hierbei sollte eine Zeilenabdeckung von 100\%, sowohl für den Quelltext des Programm als auch bei den Testfällen erreicht werden.
-Gefordert war neben der Zeilenabdeckung des bestehenden Programm auch ein Testfall, bei dem nicht genügend Arbeitsspeicher beim Einlesen der Datei zu Verfügung steht.
+Gefordert war neben der Zeilenabdeckung des bestehenden Programm auch ein Testfall, bei dem nicht genügend Arbeitsspeicher beim Einlesen der Datei zur Verfügung steht.
 
 Um diese Anforderungen umzusetzen wurden Unit-Tests mit Hilfe von \citep{www:JUNIT} erstellt. Die Zeilenabdeckung der Unit-Tests wurde mit dem \citep{www:ECLEMMA} überprüft, welches sich ebenso wie JUnit in die von den Gruppenmitgliedern genutzte Entwicklungsumgebung Eclipse eingliedern lässt.
 
 \subsection{Klasse FileErros}
 \label{sec:fileerrors}
-In der Klasse \texttt{FileErrors} wurden Fehlerfälle abgedeckt, die mit den Parametern bei Programmstart zusammen hängen.
+In der Klasse \texttt{FileErrors} wurden Fehlerfälle abgedeckt, die mit den Parametern beim Programmstart zusammen hängen.
 Hierbei wurde die korrekte Anzahl der Parameter getestet, da die Verschmelzung nur bei genau drei Dateien möglich ist.
 Dazu wurden jeweils den Testfällen zu wenige, zu viel als auch nicht vorhandene Dateinamen übergeben.
 
@@ -229,7 +229,7 @@ Sind die zu verschmelzenden Dateien identisch, so ist die Erstellung des LGT und
 
 \subsection{Klasse GivenFiles}
 \label{sec:givenfiles}
-Die vom Betreuer ausgegeben Dateien zum Test des Programmverhalten wurden in der Klasse \texttt{GivenFiles} getestet. Mit diesen Dateien konnten aufgrund ihres Aufbaus einen Großteil der Zeilenabdeckung erreicht werden. Das aus dieser Verschmelzung erzeugte Ergebnis diente zudem bei der Abgabe, der ersten Aufgabe, zur Überprüfung der Korrektheit des Algorithmus.
+Die vom Betreuer ausgegeben Dateien zum Test des Programmverhalten wurden in der Klasse \texttt{GivenFiles} getestet. Mit diesen Dateien konnte, aufgrund ihres Aufbaus, ein Großteil der Zeilenabdeckung erreicht werden. Das aus dieser Verschmelzung erzeugte Ergebnis diente zudem, bei der Abgabe der ersten Aufgabe, zur Überprüfung der Korrektheit des Algorithmus.
 
 \subsection{Klasse FilesLonger}
 \label{sec:fileslonger}
@@ -239,14 +239,14 @@ Um dieses Verhalten abzudecken wurden für die beiden Fälle, dass die erste bzw
 \subsection{Klasse NotEnoughMemory}
 \label{sec:notenoughmemory}
 Wie oben beschrieben sollte auch abgedeckt werden, dass nicht genügend Arbeitsspeicher zum Einlesen der Dateien zur Verfügung steht.
-Da dieser Fall bei einer standardgemäß konfigurierten Java Virtual Machine nicht auftritt mussten an dieser Anpassungen vorgenommen werden 	Als erster Schritt wurde eine weitere Startkonfiguration für die Zeilenabdeckung erzeugt. Dieser Konfiguration wurde als VM-Parameter \texttt{-Xmx5M} übergeben.
+Da dieser Fall bei einer standardgemäß konfigurierten Java Virtual Machine nicht auftritt mussten an dieser Anpassungen vorgenommen werden.	Als erster Schritt wurde eine weitere Startkonfiguration für die Zeilenabdeckung erzeugt. Dieser Konfiguration wurde als VM-Parameter \texttt{-Xmx5M} übergeben.
 Dieser Parameter begrenzt den verfügbaren Heapspeicher der JVM auf maximal 5 MB. In Verbindung mit einer 5 MB großen Testdatei konnte so das gewünschte Verhalten provoziert werden.
-Im Anschluss wurde ein Testfall geschrieben welcher die Datei innerhalb einer \texttt{try/catch}\-Struktur aufruft und entsprechend eine \texttt{OutOfMemoryError}-Exception wirft.
+Im Anschluss wurde ein Testfall geschrieben welcher die Datei innerhalb einer \texttt{try/catch}-Struktur aufruft und entsprechend eine \texttt{OutOfMemoryError}-Exception wirft.
 
 Da nun zwei Startkonfigurationen vorhanden waren, welche gemeinsam das gesamte Verhalten abdecken, mussten diese kombiniert werden.
 Die Gruppenmitglieder nutzten hierfür die Möglichkeit innerhalb des \citep{www:ECLEMMA} zwei Testdurchläufe zu verknüpfen.
 Dadurch ist es möglich, sowohl mit ausreichendem als auch mit zu geringem Arbeitsspeicher zu testen und anschließend durch Kombination 100\% Testabdeckung zu erhalten.
-Um diesen Testfall auch für Dritte, welche den Quelltext aus dem oben genannten Repository herunterladen, durchführbar zu machen, wurde in der dem Projekt beiliegenden \texttt{README.md} ein Hinweis eingefügt.
+Um diesen Testfall auch für Dritte durchführbar zu machen, wurde auch für diesen Fall in der \texttt{README.md} ein Hinweis eingefügt.
 
 \clearpage
 \appendix
