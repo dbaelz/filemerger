@@ -92,7 +92,7 @@
 Ziel der Blockveranstaltung Qualitätssicherung ist es, in die Thematik der Software-Qualitätssicherung einzuführen.
 Kombiniert wird hierbei die Vorlesung mit einer praktischen Aufgabe, die einen Teilbereich des Vorlesungsinhalt umsetzt. Im Rahmen der Vorlesung wurde erläutert wie aus zwei gegebenen Sequenzen die Längste-Gemeinsame-Teilfolge (LGT) mit einer maximalen Komplexität von $O(n^2)$ ermittelt wird.
 Mit Hilfe dieser Teilfolge ist es möglich eine Verschmelzung von Dateien durchzuführen und eine Teilmenge der entstehenden Konflikte automatisiert zu lösen.
-Aufbauend auf die in der Vorlesung gelehrten Konzepte bestand die erste Aufgabe daraus, ein Programm zur Verschmelzung von zwei unabhängig weiterentwickelten Revision V1 und V2 aus der Ausgangsdatei V selbstständig ohne Zuhilfenahme bestehender Verschmelzungs-Algorithmen zu implementieren. Auftretende Konflikte sollten wenn möglich automatisiert gelöst werden. Im Fall von nicht lösbaren Konflikten soll der Anwender über den Konflikt informiert werden, so dass er eine manuelle Verschmelzung vornehmen kann.
+Aufbauend auf die in der Vorlesung gelehrten Konzepte bestand die erste Aufgabe daraus, ein Programm zur Verschmelzung von zwei unabhängig weiterentwickelten Revisionen, V1 und V2, aus der Ausgangsdatei V selbstständig und ohne Zuhilfenahme bestehender Verschmelzungs-Algorithmen zu implementieren. Auftretende Konflikte sollten wenn möglich automatisiert gelöst werden. Im Fall von nicht lösbaren Konflikten soll der Anwender über den Konflikt informiert werden, so dass er eine manuelle Verschmelzung vornehmen kann.
 Die zweite Aufgabe bestand daraus, dass in der ersten Aufgabe erstellte Programm mittels geeigneter Testfälle und eines Programms zur Überprüfung der Zeilenabdeckung zu testen.
 
 
@@ -110,7 +110,7 @@ Das Programm übernimmt als Parameter die drei benötigten Dateien, mit deren Hi
 
 \lstset{language=sh, numbers=none, xleftmargin=0pt}
 \begin{lstlisting}
-java -jar FileMerger V.txt V1.txt V2.txt
+java -jar FileMerger.jar V.txt V1.txt V2.txt
 \end{lstlisting}
 Wie dem Dateinamen zu entnehmen ist handelt es sich beim ersten Parameter um die Ausgangsdatei $V$,
 die beiden folgenden Parameter stellen die zu verschmelzenden Revisionen $V1$ und $V2$ dar.
@@ -140,7 +140,7 @@ Der erwähnte Algorithmus zur Ermittlung des LGT bekommt setzt mit Hilfe der Ein
 \item Ist keine weitere Übereinstimmung vorhanden erhalten die anderen Felder den Wert des rechts bzw. unten angrenzenden Feldes.
 \end{itemize}
 
-Durch dieses Vorgehen ist am Ende des Durchlaufes im ersten Feld der Matrix die Anzahl ablesbar.
+Durch dieses Vorgehen ist am Ende des Durchlaufes im ersten Feld der Matrix die Länge der Teilfolge ablesbar.
 Um nun die längste gemeinsame Teilfolge zu ermitteln muss erneut über die gewonnene Matrix und die einzelnen Listenelemente der Eingabeparameter iteriert werden.
 Hierfür werden die diagonalen Übergänge in der Matrix gesucht, da dort die Listenelemente übereinstimmen. Diese werden dann zur Ergebnismenge hinzugefügt.
 Der beschriebene Algorithmus ermittelt den LGT innerhalb von $O(nm)$ , bei unterschiedlich langen Dateien, und in $O(n^2)$ bei gleich langen Dateien. Somit erfüllt der Algorithmus die gewünschte Laufzeitforderung.
@@ -174,7 +174,7 @@ Die eingelesenen Zeilen werden dann als SHA-1 Hash in eine \texttt{ArrayList} ab
 \subsubsection{lcs(List<String> list1, List<String> list2)}
 \label{sec:lcs}
 Die übergebenen Listen benutzt die \texttt{lcs}-Methode um den oben beschriebenen Algorithmus zur Ermittlung der längsten gemeinsamen Teilfolge zu implementieren.
-Hierzu werden immer zwei Listen als Eingabeparameter übergeben, aus diesen die längste gemeinsame Teilfolge ermittelt und diese als ArrayList zurück gegeben.
+Hierzu werden immer zwei Listen als Eingabeparameter übergeben, aus diesen wird die längste gemeinsame Teilfolge ermittelt und das Ergebnis als ArrayList zurück gegeben.
 
 \subsubsection{merge()}
 \label{sec:merge}
@@ -225,11 +225,11 @@ Um diesen Testfall auch für Dritte, welche den Quelltext aus dem oben genannten
 
 \subsection{Klasse FilesEqual}
 \label{sec:filesequal}
-Sind die zu verschmelzenden Dateien identisch, so ist die Erstellung des LGT und das Verschmelzen nicht notwendig. Statt dessen wird die erste Datei als Verschmelzungsergebnis ausgegeben, was die Laufzeit des Programm erheblich verkürzt. Um diesen Fall zu testen wurde in der \texttt{FilesEqual}-Klasse identische, zu verschmelzende Dateien.
+Sind die zu verschmelzenden Dateien identisch, so ist die Erstellung des LGT und das Verschmelzen nicht notwendig. Statt dessen wird die erste Datei als Verschmelzungsergebnis ausgegeben, was die Laufzeit des Programm erheblich verkürzt. Um diesen Fall zu testen wurde in der \texttt{FilesEqual}-Klasse identische, zu verschmelzende Dateien verwendet.
 
 \subsection{Klasse GivenFiles}
 \label{sec:givenfiles}
-Die vom Betreuer ausgegeben Dateien zum Test des Programmverhalten wurden in der Klasse \texttt{GivenFiles} getestet. Mit diesen Dateien konnten aufgrund ihres Aufbaus einen Großteul der Zeilenabdeckung abgedeckt werden. Das aus dieser Verschmelzung erzeugte Verschmelzungsergebnis diente zudem bei der Abgabe der ersten Aufgabe zur Überprüfung der Korrektheit des Algorithmus.
+Die vom Betreuer ausgegeben Dateien zum Test des Programmverhalten wurden in der Klasse \texttt{GivenFiles} getestet. Mit diesen Dateien konnten aufgrund ihres Aufbaus einen Großteil der Zeilenabdeckung erreicht werden. Das aus dieser Verschmelzung erzeugte Ergebnis diente zudem bei der Abgabe, der ersten Aufgabe, zur Überprüfung der Korrektheit des Algorithmus.
 
 \subsection{Klasse FilesLonger}
 \label{sec:fileslonger}
@@ -239,8 +239,7 @@ Um dieses Verhalten abzudecken wurden für die beiden Fälle, dass die erste bzw
 \subsection{Klasse NotEnoughMemory}
 \label{sec:notenoughmemory}
 Wie oben beschrieben sollte auch abgedeckt werden, dass nicht genügend Arbeitsspeicher zum Einlesen der Dateien zur Verfügung steht.
-Da dieser Fall bei einer standardgemäß konfigurierten Java Virtual Machine nicht auftritt mussten an dieser Anpassungen vorgenommen werden.
-Als erster Schritt wurde eine weitere Startkonfiguration für die Zeilenabdeckung erzeugt. Dieser Konfiguration wurde als VM-Parameter \texttt{-Xmx5M} übergeben.
+Da dieser Fall bei einer standardgemäß konfigurierten Java Virtual Machine nicht auftritt mussten an dieser Anpassungen vorgenommen werden 	Als erster Schritt wurde eine weitere Startkonfiguration für die Zeilenabdeckung erzeugt. Dieser Konfiguration wurde als VM-Parameter \texttt{-Xmx5M} übergeben.
 Dieser Parameter begrenzt den verfügbaren Heapspeicher der JVM auf maximal 5 MB. In Verbindung mit einer 5 MB großen Testdatei konnte so das gewünschte Verhalten provoziert werden.
 Im Anschluss wurde ein Testfall geschrieben welcher die Datei innerhalb einer \texttt{try/catch}\-Struktur aufruft und entsprechend eine \texttt{OutOfMemoryError}-Exception wirft.
 
