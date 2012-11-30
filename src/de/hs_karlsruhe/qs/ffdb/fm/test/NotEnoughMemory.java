@@ -10,7 +10,7 @@ import de.hs_karlsruhe.qs.ffdb.fm.Merge;
  * @author Daniel Baelz and Fabian Freimueller
  *
  */
-public class NoEnoughMemory {
+public class NotEnoughMemory {
 	@Test
 	public void TestFileNotEnoughMemory() {
 		try {
